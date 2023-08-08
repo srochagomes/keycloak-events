@@ -1,0 +1,43 @@
+jdbc_url: ${DB_JDBC:jdbc:postgresql://172.17.0.1:5432/keycloakdb}
+user_db: ${DB_USER:postgres}
+pass_db: ${DB_PASSWORD:admin}
+
+
+host_rabbit: ${RABBIT_HOST:192.168.15.103}
+user_rabbit: ${RABBIT_USER:api}
+pass_rabbit: ${RABBIT_PASSWORD:api@user}
+port_rabbit: ${RABBIT_PORT:5672}
+user_email: ${EMAIL_USERNAME:gomblesolutions@gmail.com}
+pass_email: ${EMAIL_PASSWORD:lqxmahblswywlgek}
+
+
+quarkus:
+  datasource:
+    jdbc:
+      url: ${jdbc_url}
+    username: ${user_db}
+    password: ${pass_db}
+    db-kind: postgresql
+  log:
+    level: INFO
+  health:
+    openapi:
+      included: true
+    extensions:
+      enabled: true
+  smallrye-health:
+    ui:
+      always-include: true
+    root-path: /_app-state/health
+  flyway:
+    baseline-version: 0.0.1
+    create-schemas: true
+    schemas: flyway-schema
+    default-schemas: public
+    baseline-on-migrate: true
+    migrate-at-start: true
+    enabled: true
+    locations: classpath:db/migration
+
+
+
