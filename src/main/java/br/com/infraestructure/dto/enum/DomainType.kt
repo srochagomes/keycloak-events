@@ -1,4 +1,4 @@
-package infraestructure.dto.enum
+package br.com.infraestructure.dto.enum
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 

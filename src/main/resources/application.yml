@@ -12,32 +12,49 @@ pass_email: ${EMAIL_PASSWORD:lqxmahblswywlgek}
 
 
 quarkus:
-  datasource:
-    jdbc:
-      url: ${jdbc_url}
-    username: ${user_db}
-    password: ${pass_db}
-    db-kind: postgresql
-  log:
-    level: INFO
-  health:
-    openapi:
-      included: true
-    extensions:
+    hibernate-orm:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      database:
+        generation: none
+      scripts:
+        generation: none
+      active: true
+    database:
+      generation: none
+    datasource:
+      jdbc:
+        url: ${jdbc_url}
+      username: ${user_db}
+      password: ${pass_db}
+      db-kind: postgresql
+    log:
+      level: INFO
+    health:
+      openapi:
+        included: true
+      extensions:
+        enabled: true
+    smallrye-health:
+      ui:
+        always-include: true
+      root-path: /_app-state/health
+    flyway:
+      baseline-version: 0.0.1
+      create-schemas: true
+      schemas: flyway-schema
+      default-schemas: public
+      baseline-on-migrate: true
+      migrate-at-start: true
       enabled: true
-  smallrye-health:
-    ui:
-      always-include: true
-    root-path: /_app-state/health
-  flyway:
-    baseline-version: 0.0.1
-    create-schemas: true
-    schemas: flyway-schema
-    default-schemas: public
-    baseline-on-migrate: true
-    migrate-at-start: true
-    enabled: true
-    locations: classpath:db/migration
+      locations: classpath:db/migration
 
 
+events:
+  origin:
+     user-entity: "jpa://br.com.infraestructure.entity.UserEntityEvent?namedQuery=GetAll&consumeDelete=true&maximumResults=200"
 
+
+  destiny:
+    rabbit-mq:
+      user:
+        events: "spring-rabbitmq:keycloak?routingKey=event.user.keycloak.events&exchangeType=topic&autoDeclare=true"

@@ -1,4 +1,4 @@
-package infraestructure.config
+package br.com.infraestructure.config
 
 import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.config.inject.ConfigProperty

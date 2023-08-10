@@ -1,16 +1,16 @@
 CREATE TABLE public.TB_USER_EVENT (
-                                      DT_HR_CREATED TIMESTAMP PRIMARY KEY,
-                                      DS_EVENT TEXT NOT NULL,
-                                      ID_USER UUID  NOT NULL,
-                                      DS_OLD_VALUE_JSON TEXT,
-                                      DS_NEW_VALUE_JSON TEXT
+          DT_HR_CREATED TIMESTAMP PRIMARY KEY,
+          DS_EVENT TEXT NOT NULL,
+          ID_USER VARCHAR(36)  NOT NULL,
+          DS_OLD_VALUE_JSON TEXT,
+          DS_NEW_VALUE_JSON TEXT
 );
 
 
 -- Trigger para geração dos eventos
 
 -- Criação da função que será executada pela trigger
-CREATE OR REPLACE FUNCTION user_entity_event_trigger_function()
+CREATE OR REPLACE FUNCTION public.user_entity_event_trigger_function()
 RETURNS TRIGGER AS $$
 DECLARE
 event_trigger text;
@@ -18,15 +18,15 @@ BEGIN
 	IF TG_OP = 'INSERT' THEN
         event_trigger := 'INSERTED';
         INSERT INTO public.TB_USER_EVENT (DT_HR_CREATED, DS_EVENT, ID_USER, DS_OLD_VALUE_JSON, DS_NEW_VALUE_JSON)
-        VALUES (NOW(), event_trigger,UUID(NEW.id), null, jsonb_pretty(row_to_json(NEW)::jsonb)::text);
+        VALUES (NOW(), event_trigger,UUID(NEW.id), null, row_to_json(NEW)::jsonb::text);
     ELSIF TG_OP = 'UPDATE' THEN
         event_trigger := 'UPDATED';
         INSERT INTO public.TB_USER_EVENT (DT_HR_CREATED, DS_EVENT, ID_USER, DS_OLD_VALUE_JSON, DS_NEW_VALUE_JSON)
-        VALUES (NOW(), event_trigger,UUID(OLD.id), jsonb_pretty(row_to_json(OLD)::jsonb)::text, jsonb_pretty(row_to_json(NEW)::jsonb)::text);
+        VALUES (NOW(), event_trigger,UUID(OLD.id), row_to_json(OLD)::jsonb::text, row_to_json(NEW)::jsonb::text);
     ELSIF TG_OP = 'DELETE' THEN
         event_trigger := 'DELETED';
         INSERT INTO public.TB_USER_EVENT (DT_HR_CREATED, DS_EVENT, ID_USER, DS_OLD_VALUE_JSON, DS_NEW_VALUE_JSON)
-        VALUES (NOW(), event_trigger,UUID(OLD.id), jsonb_pretty(row_to_json(OLD)::jsonb)::text, null);
+        VALUES (NOW(), event_trigger,UUID(OLD.id), row_to_json(OLD)::jsonb::text, null);
     END IF;
 
 
@@ -39,6 +39,14 @@ CREATE TRIGGER user_entity_event_trigger
         ON public.user_entity
             FOR EACH ROW
             EXECUTE FUNCTION user_entity_event_trigger_function();
+
+--Controlle Camel process
+create table public.CAMEL_MESSAGEPROCESSED (id bigint not null, createdAt timestamp(6), messageId varchar(255), processorName varchar(255), primary key (id));
+alter table if exists public.CAMEL_MESSAGEPROCESSED drop constraint if exists UK3gjvyad9j4kd1xeog8xws0skp;
+alter table if exists public.CAMEL_MESSAGEPROCESSED add constraint UK3gjvyad9j4kd1xeog8xws0skp unique (processorName, messageId);
+create sequence public.CAMEL_MESSAGEPROCESSED_SEQ start with 1 increment by 50;
+
+
 
 /*
  CREATE TABLE exemplo (

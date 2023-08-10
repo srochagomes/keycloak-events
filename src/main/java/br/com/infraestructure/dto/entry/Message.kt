@@ -1,8 +1,8 @@
-package infraestructure.dto.entry
+package br.com.infraestructure.dto.entry
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
-import infraestructure.dto.enum.MessageType
+import br.com.infraestructure.dto.enum.MessageType
 import io.quarkus.runtime.annotations.RegisterForReflection
 import java.time.LocalDateTime
 
@@ -10,8 +10,9 @@ import java.time.LocalDateTime
 @JsonIgnoreProperties(ignoreUnknown = true)
 @RegisterForReflection
 data class Message(var type : MessageType,
-            var createAt: LocalDateTime?,
-            var specification : Specification) {
+                   var createAt: LocalDateTime?,
+                   var specification : Specification
+) {
 
     constructor() : this(MessageType.NONE, null, Specification())
 }

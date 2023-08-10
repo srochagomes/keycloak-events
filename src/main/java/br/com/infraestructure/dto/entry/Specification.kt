@@ -1,8 +1,8 @@
-package infraestructure.dto.entry
+package br.com.infraestructure.dto.entry
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
-import infraestructure.dto.enum.DomainType
+import br.com.infraestructure.dto.enum.DomainType
 import io.quarkus.runtime.annotations.RegisterForReflection
 import java.util.*
 

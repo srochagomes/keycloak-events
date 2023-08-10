@@ -1,4 +1,4 @@
-package infraestructure.dto.entry
+package br.com.infraestructure.dto.entry
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
