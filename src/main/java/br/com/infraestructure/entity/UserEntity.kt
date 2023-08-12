@@ -16,7 +16,6 @@ import java.util.*
 @Table(name = "user_entity", schema = "public")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@RegisterForReflection
 data class UserEntity(
     @Id @Column(name = "id") var id : String,
     @Column(name = "email") var email : String,

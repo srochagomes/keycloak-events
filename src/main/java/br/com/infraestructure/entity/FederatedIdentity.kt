@@ -12,7 +12,6 @@ import java.util.*
 @Table(name = "federated_identity", schema = "public")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@RegisterForReflection
 data class FederatedIdentity(
     @Id @Column(name = "identity_provider") var identityProvider : String,
     @Column(name = "realm_id") var realmId : String,

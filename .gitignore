@@ -41,3 +41,6 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+create_image_quarkus_on_server.sh
+increment-version.sh

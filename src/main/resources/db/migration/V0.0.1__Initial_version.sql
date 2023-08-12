@@ -1,5 +1,6 @@
 CREATE TABLE public.TB_USER_EVENT (
-          DT_HR_CREATED TIMESTAMP PRIMARY KEY,
+          ID_KEY UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+          DT_HR_CREATED TIMESTAMP,
           DS_EVENT TEXT NOT NULL,
           ID_USER VARCHAR(36)  NOT NULL,
           DS_OLD_VALUE_JSON TEXT,
@@ -18,7 +19,7 @@ BEGIN
 	IF TG_OP = 'INSERT' THEN
         event_trigger := 'INSERTED';
         INSERT INTO public.TB_USER_EVENT (DT_HR_CREATED, DS_EVENT, ID_USER, DS_OLD_VALUE_JSON, DS_NEW_VALUE_JSON)
-        VALUES (NOW(), event_trigger,UUID(NEW.id), null, row_to_json(NEW)::jsonb::text);
+        VALUES ( NOW(), event_trigger,UUID(NEW.id), null, row_to_json(NEW)::jsonb::text);
     ELSIF TG_OP = 'UPDATE' THEN
         event_trigger := 'UPDATED';
         INSERT INTO public.TB_USER_EVENT (DT_HR_CREATED, DS_EVENT, ID_USER, DS_OLD_VALUE_JSON, DS_NEW_VALUE_JSON)
